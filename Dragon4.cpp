@@ -749,6 +749,9 @@ tU32 Dragon4
         return 1;
     }
 
+    tB isEven = (mantissa % 2) == 0;
+    tS32 cmp;
+
     // compute the initial state in integral form such that
     //  value     = scaledValue / scale
     //  marginLow = scaledMarginLow / scale
@@ -763,6 +766,8 @@ tU32 Dragon4
     // the low margin.
     tBigInt * pScaledMarginHigh;
     tBigInt optionalMarginHigh;
+
+    tBigInt scaledValueHigh;
 
     if ( hasUnequalMargins )
     {
@@ -904,7 +909,9 @@ tU32 Dragon4
     }
 
     // If (value >= 1), our estimate for digitExponent was too low
-    if( BigInt_Compare(scaledValue,scale) >= 0 )
+    BigInt_Add(&scaledValueHigh, scaledValue, *pScaledMarginHigh);
+    cmp = BigInt_Compare(scaledValueHigh, scale);
+    if (isEven ? (cmp >= 0) : (cmp > 0))
     {
         // The exponent estimate was incorrect.
         // Increment the exponent and don't perform the premultiply needed
@@ -1000,13 +1007,14 @@ tU32 Dragon4
             RJ_ASSERT( outputDigit < 10 );
 
             // update the high end of the value
-            tBigInt scaledValueHigh;
             BigInt_Add( &scaledValueHigh, scaledValue, *pScaledMarginHigh );
 
             // stop looping if we are far enough away from our neighboring values
             // or if we have reached the cutoff digit
-            low = BigInt_Compare(scaledValue, scaledMarginLow) < 0;
-            high = BigInt_Compare(scaledValueHigh, scale) > 0;
+            cmp = BigInt_Compare(scaledValue, scaledMarginLow);
+            low = isEven ? (cmp <= 0) : (cmp < 0);
+            cmp = BigInt_Compare(scaledValueHigh, scale);
+            high = isEven ? (cmp >= 0) : (cmp > 0);
             if (low | high | (digitExponent == cutoffExponent))
                 break;
 

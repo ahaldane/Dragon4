@@ -68,9 +68,12 @@ int main()
 	TestFormat_F32(valBuff, valBuffSize, PrintFloatFormat_Scientific,  0,  -10.234f, "-1e+001");
 	TestFormat_F32(valBuff, valBuffSize, PrintFloatFormat_Positional,  2,  10.234f,  "10.23");
 	TestFormat_F32(valBuff, valBuffSize, PrintFloatFormat_Scientific,  2,  10.234f,  "1.02e+001");
-	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  16,  9.9999999999999995e-008,  "9.9999999999999995e-008");
-	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  16,  9.8813129168249309e-324,  "9.8813129168249309e-324");
-	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  16,  9.9999999999999694e-311,  "9.9999999999999694e-311");
+	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  16,  9.9999999999999995e-008,  "1.0000000000000000e-007");
+	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  16,  9.8813129168249309e-324,  "0.9881312916824931e-323");
+	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  16,  9.9999999999999694e-311,  "0.9999999999999969e-310");
+	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  -1,  9.9999999999999995e-008,  "1e-007");
+	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  -1,  9.8813129168249309e-324,  "1e-323");
+	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific,  -1,  9.9999999999999694e-311,  "1e-310");
 
 	// test rounding
 	TestFormat_F32(valBuff, valBuffSize, PrintFloatFormat_Positional, 10, 3.14159265358979323846f, "3.1415927410"); // 3.1415927410 is closest tF32 to PI
@@ -86,6 +89,8 @@ int main()
 	TestFormat_F32(valBuff, valBuffSize, PrintFloatFormat_Positional, 25, 3.14159265358979323846f, "3.1415927410125732421875000");
 	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Positional, 50, 3.14159265358979323846,  "3.14159265358979311599796346854418516159057617187500");
 	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Positional, -1, 3.14159265358979323846,  "3.141592653589793");
+
+	TestFormat_F64(valBuff, valBuffSize, PrintFloatFormat_Scientific, -1, 1e23,  "1e+023");
 
 	// smallest numbers
 	TestFormat_F32(valBuff, valBuffSize, PrintFloatFormat_Positional, 149, powf(0.5, 126 + 23), "0.00000000000000000000000000000000000000000000140129846432481707092372958328991613128026194187651577175706828388979108268586060148663818836212158203125");
